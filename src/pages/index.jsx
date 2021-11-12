@@ -1,4 +1,5 @@
 import React from 'react'
+import Button from '../components/button'
 import Icon from '../components/icons'
 
 const Landing = function () {
@@ -10,6 +11,9 @@ const Landing = function () {
           <Icon name="logo" className="mr-2" size={28} />
           <h2 className="text-3xl font-semibold">Memoora</h2>
         </div>
+        <Button icon="home" className="mt-4">
+          Home
+        </Button>
       </div>
     </div>
   )

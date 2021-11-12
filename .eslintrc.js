@@ -17,5 +17,12 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'prettier/prettier': 'error',
     'func-names': 0,
+    'react/jsx-props-no-spreading': [
+      0,
+      {
+        html: 'ignore',
+      },
+    ],
+    'no-nested-ternary': 0,
   },
 }
