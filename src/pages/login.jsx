@@ -1,73 +1,84 @@
 import React, { useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import Button from '../components/button'
 import Input from '../components/input'
+import { handleChange, validateAll } from '../utils/form'
 
-const List = function () {
+const Login = function () {
   const [isDisabled, setDisabled] = useState(true)
-
-  const formField = {
+  const [formField, setFormField] = useState({
     email: {
       ref: useRef(),
       validate: [],
+      value: '',
     },
     password: {
       ref: useRef(),
       validate: [],
+      value: '',
     },
-  }
-
-  const checkAll = (field) => {
-    const arr = Object.keys(field)
-    for (let i = 0; i < arr.length; i += 1) {
-      if (field[arr[i]].validate.length !== 0) {
-        return true
-      }
-    }
-    return false
-  }
-
-  const handleChange = (event, name = '') => {
-    if (name !== '') {
-      const test = formField[name].ref.current.validate()
-      formField[name].validate = test
-    }
-    setDisabled(checkAll(formField, setDisabled))
-  }
+  })
 
   const handleSubmit = (event) => {
-    const arr = Object.keys(formField)
-    for (let i = 0; i < arr.length; i += 1) {
-      formField[arr[i]].validate = formField[arr[i]].ref.current.validate()
+    if (validateAll(formField, setFormField)) {
+      console.log(formField)
     }
     event.preventDefault()
   }
 
   return (
-    <form onSubmit={(event) => handleSubmit(event)}>
-      <Input
-        idx="login_email"
-        name="email"
-        type="text"
-        label="Email"
-        placeholder="admin@admin.com"
-        validation="required|email|min:8|max:50"
-        ref={formField.email.ref}
-        onChange={(event) => handleChange(event, 'email')}
-      />
-      <Input
-        idx="login_password"
-        name="password"
-        type="password"
-        label="Password"
-        validation="required|min:8|max:50"
-        ref={formField.password.ref}
-        onChange={(event) => handleChange(event, 'password')}
-      />
-      <Button icon="right" right disabled={isDisabled} submit>
-        Submit
-      </Button>
-    </form>
+    <>
+      <h2 className="text-center text-4xl text-blue-900 font-display font-semibold lg:text-left xl:text-5xl xl:text-bold">
+        Log in
+      </h2>
+      <div className="mt-12">
+        <form onSubmit={(event) => handleSubmit(event)}>
+          <div>
+            <Input
+              idx="login_email"
+              name="email"
+              type="text"
+              label="Email"
+              placeholder="admin@admin.com"
+              validation="required|email|min:8|max:50"
+              ref={formField.email.ref}
+              onChange={(event) =>
+                handleChange(event, formField, setFormField, setDisabled, 'email')
+              }
+            />
+          </div>
+          <div className="mt-10">
+            <Input
+              idx="login_password"
+              name="password"
+              type="password"
+              label="Password"
+              placeholder="**************"
+              validation="required|min:8|max:50"
+              ref={formField.password.ref}
+              onChange={(event) =>
+                handleChange(event, formField, setFormField, setDisabled, 'password')
+              }
+            />
+          </div>
+          <div className="mt-10">
+            <Button icon="right" right fluid disabled={isDisabled} submit>
+              Login
+            </Button>
+          </div>
+        </form>
+        <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
+          <span>Don&#8216;t have an account? </span>
+          <Link
+            to="/register"
+            className="underline cursor-pointer text-blue-600 hover:text-blue-800"
+          >
+            Register
+          </Link>
+        </div>
+      </div>
+    </>
   )
 }
 
-export default List
+export default Login

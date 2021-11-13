@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import Validation from '../utils/validation'
 
 const classes = {
-  label: 'text-sm font-bold text-gray-700 tracking-wide',
+  label: 'w-full text-sm font-bold text-gray-700 tracking-wide',
   input: 'w-full text-lg py-2 border-b-2 border-gray-300 focus:outline-none focus:border-blue-500',
   errorClass: 'text-red-500 text-xs',
 }
@@ -13,15 +13,18 @@ const Button = forwardRef(({ idx, type, name, label, placeholder, validation, ..
   const [value, setValue] = useState([])
 
   useImperativeHandle(ref, () => ({
-    validate() {
-      const validate = Validation(name, value, validation)
+    validate(form) {
+      const validate = Validation(name, value, validation, form)
       setMessage(validate)
-      return validate
+      return {
+        input: value,
+        message: validate,
+      }
     },
   }))
 
-  const onKeyUpValue = (bind) => {
-    setValue(bind.target.value)
+  const onKeyDownValue = (bind) => {
+    setValue(bind.target.value.trim())
   }
 
   let messageElement
@@ -38,7 +41,7 @@ const Button = forwardRef(({ idx, type, name, label, placeholder, validation, ..
         placeholder={placeholder}
         id={idx}
         ref={ref}
-        onKeyUp={(e) => onKeyUpValue(e)}
+        onKeyDown={(e) => onKeyDownValue(e)}
         {...props}
       />
       {messageElement}

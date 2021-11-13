@@ -35,11 +35,20 @@ const validateMin = (value, params) => {
   return String(value).length >= Number(params)
 }
 
+const validateConfirmation = (value, params, form) => {
+  if (isEmpty(value)) {
+    return true
+  }
+
+  return String(value) === form[String(params)].value
+}
+
 export const validation = {
   required: validateRequired,
   email: validateEmail,
   max: validateMax,
   min: validateMin,
+  confirmation: validateConfirmation,
 }
 
 export const message = {
@@ -47,9 +56,10 @@ export const message = {
   email: 'The {0} must be a valid email address.',
   max: 'The {0} must not be greater than {1}.',
   min: 'The {0} must be at least {1}.',
+  confirmation: 'The {0} confirmation does not match.',
 }
 
-const goValidation = (field, value, validate) => {
+export const goValidation = (field, value, validate, form) => {
   const error = []
   if (validate === '') {
     return error
@@ -61,12 +71,23 @@ const goValidation = (field, value, validate) => {
     if (val.includes(':')) {
       ;[val, attribute] = val.split(':')
     }
-    const goValidate = validation[val](value, attribute)
+    const goValidate = validation[val](value, attribute, form)
     if (!goValidate) {
       error.push(parseString(message[val], field, attribute))
     }
   }
   return error
+}
+
+export const checkAll = (field, setOke) => {
+  const arr = Object.keys(field)
+  for (let i = 0; i < arr.length; i += 1) {
+    if (field[arr[i]].validate.length !== 0) {
+      setOke(true)
+      return
+    }
+  }
+  setOke(false)
 }
 
 export default goValidation

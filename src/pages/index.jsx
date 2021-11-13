@@ -11,8 +11,8 @@ const Landing = function () {
           <Icon name="logo" className="mr-2" size={28} />
           <h2 className="text-3xl font-semibold">Memoora</h2>
         </div>
-        <Button icon="home" className="mt-4">
-          Home
+        <Button to="/login" className="mt-4">
+          Login
         </Button>
       </div>
     </div>

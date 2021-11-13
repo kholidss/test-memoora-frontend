@@ -6,7 +6,7 @@ import Icon from './icons'
 
 const classes = {
   base: 'inline-flex items-center justify-center relative overflow-hidden mx-auto focus:outline-none transition ease-in-out duration-300',
-  fluid: '-mx-0',
+  fluid: '-mx-0 w-full',
   disabled: 'opacity-75 cursor-not-allowed',
   rounded: {
     default: {
