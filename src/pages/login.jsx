@@ -31,7 +31,7 @@ const Login = function () {
       <h2 className="text-center text-4xl text-blue-900 font-display font-semibold lg:text-left xl:text-5xl xl:text-bold">
         Log in
       </h2>
-      <div className="mt-12">
+      <div className="mt-5">
         <form onSubmit={(event) => handleSubmit(event)}>
           <div>
             <Input
@@ -47,7 +47,7 @@ const Login = function () {
               }
             />
           </div>
-          <div className="mt-10">
+          <div className="mt-5">
             <Input
               idx="login_password"
               name="password"
@@ -61,13 +61,13 @@ const Login = function () {
               }
             />
           </div>
-          <div className="mt-10">
+          <div className="mt-5">
             <Button icon="right" right fluid disabled={isDisabled} submit>
               Login
             </Button>
           </div>
         </form>
-        <div className="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
+        <div className="mt-5 text-sm font-display font-semibold text-gray-700 text-center">
           <span>Don&#8216;t have an account? </span>
           <Link
             to="/register"

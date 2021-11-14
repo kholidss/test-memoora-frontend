@@ -15,7 +15,7 @@ const App = function () {
       <Routes>
         <Route path="*" element={<NotFound />} />
         <Route path="/" element={<Landing />} />
-        <Route path="/" element={<Auth />}>
+        <Route element={<Auth />}>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Route>
