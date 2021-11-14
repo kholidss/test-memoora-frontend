@@ -1,10 +1,12 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import Button from '../components/button'
 import Input from '../components/input'
+import axios from '../plugins/axios'
 
 const LoginSchema = yup.object().shape({
   email: yup.string().email().required(),
@@ -12,6 +14,9 @@ const LoginSchema = yup.object().shape({
 })
 
 const Login = function () {
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
   const {
     register,
     handleSubmit,
@@ -21,7 +26,24 @@ const Login = function () {
     resolver: yupResolver(LoginSchema),
   })
   const onSubmit = (data) => {
+    setIsLoading(true)
     console.log(data)
+    axios
+      .post('/api/login', data)
+      .then((res) => {
+        console.log(res)
+        localStorage.setItem('userData', JSON.stringify(res.data))
+        dispatch({
+          type: 'FILL_DATA_USER',
+          payload: res.data,
+        })
+        setIsLoading(false)
+        navigate('/list')
+      })
+      .catch((err) => {
+        console.log(err)
+        setIsLoading(false)
+      })
   }
 
   return (
@@ -56,7 +78,7 @@ const Login = function () {
             />
           </div>
           <div className="mt-8">
-            <Button icon="right" right fluid disabled={!isValid} submit>
+            <Button icon="right" right fluid disabled={!isValid} isLoading={isLoading} submit>
               Login
             </Button>
           </div>
