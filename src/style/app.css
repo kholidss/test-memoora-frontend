@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-  html, body {
+  html,
+  body {
     @apply font-sans antialiased text-gray-900;
   }
 }
