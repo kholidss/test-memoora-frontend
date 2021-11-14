@@ -1,29 +1,27 @@
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import Button from '../components/button'
 import Input from '../components/input'
-import { handleChange, validateAll } from '../utils/form'
+
+const LoginSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+})
 
 const Login = function () {
-  const [isDisabled, setDisabled] = useState(true)
-  const [formField, setFormField] = useState({
-    email: {
-      ref: useRef(),
-      validate: [],
-      value: '',
-    },
-    password: {
-      ref: useRef(),
-      validate: [],
-      value: '',
-    },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(LoginSchema),
   })
-
-  const handleSubmit = (event) => {
-    if (validateAll(formField, setFormField)) {
-      console.log(formField)
-    }
-    event.preventDefault()
+  const onSubmit = (data) => {
+    console.log(data)
   }
 
   return (
@@ -31,38 +29,34 @@ const Login = function () {
       <h2 className="text-center text-4xl text-blue-900 font-display font-semibold lg:text-left xl:text-5xl xl:text-bold">
         Log in
       </h2>
-      <div className="mt-5">
-        <form onSubmit={(event) => handleSubmit(event)}>
+      <div className="mt-10">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <Input
-              idx="login_email"
+              idx="=email"
               name="email"
               type="text"
               label="Email"
               placeholder="admin@admin.com"
-              validation="required|email|min:8|max:50"
-              ref={formField.email.ref}
-              onChange={(event) =>
-                handleChange(event, formField, setFormField, setDisabled, 'email')
-              }
+              errors={errors.email}
+              ref={React.useRef()}
+              register={register}
             />
           </div>
-          <div className="mt-5">
+          <div className="mt-8">
             <Input
-              idx="login_password"
+              idx="=password"
               name="password"
               type="password"
               label="Password"
               placeholder="**************"
-              validation="required|min:8|max:50"
-              ref={formField.password.ref}
-              onChange={(event) =>
-                handleChange(event, formField, setFormField, setDisabled, 'password')
-              }
+              errors={errors.password}
+              ref={React.useRef()}
+              register={register}
             />
           </div>
-          <div className="mt-5">
-            <Button icon="right" right fluid disabled={isDisabled} submit>
+          <div className="mt-8">
+            <Button icon="right" right fluid disabled={!isValid} submit>
               Login
             </Button>
           </div>

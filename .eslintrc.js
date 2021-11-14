@@ -24,5 +24,6 @@ module.exports = {
       },
     ],
     'no-nested-ternary': 0,
+    'react/forbid-prop-types': 0,
   },
 }
