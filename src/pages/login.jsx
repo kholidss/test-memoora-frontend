@@ -31,7 +31,6 @@ const Login = function () {
     axios
       .post('/api/login', data)
       .then((res) => {
-        console.log(res)
         localStorage.setItem('userData', JSON.stringify(res.data))
         dispatch({
           type: 'FILL_DATA_USER',
