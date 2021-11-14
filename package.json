@@ -5,16 +5,20 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "lint": "eslint --ext .js,.jsx --ignore-path .gitignore --fix src",
+    "lint": "eslint --ext .js,.jsx --ignore-path .gitignore src",
+    "lint:fix": "eslint --ext .js,.jsx --ignore-path .gitignore --fix src",
     "format": "prettier .  --write"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.8.3",
     "@reduxjs/toolkit": "^1.6.2",
     "history": "^5.1.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
-    "react-router-dom": "^6.0.2"
+    "react-hook-form": "^7.19.5",
+    "react-router-dom": "^6.0.2",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^1.0.0",
