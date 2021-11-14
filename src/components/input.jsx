@@ -1,6 +1,5 @@
-import React, { forwardRef, useState, useImperativeHandle } from 'react'
+import React, { forwardRef } from 'react'
 import PropTypes from 'prop-types'
-import Validation from '../utils/validation'
 
 const classes = {
   label: 'w-full text-sm font-bold text-gray-700 tracking-wide',
@@ -8,54 +7,34 @@ const classes = {
   errorClass: 'text-red-500 text-xs',
 }
 
-const Button = forwardRef(({ idx, type, name, label, placeholder, validation, ...props }, ref) => {
-  const [message, setMessage] = useState([])
-  const [value, setValue] = useState([])
-
-  useImperativeHandle(ref, () => ({
-    validate(form) {
-      const validate = Validation(name, value, validation, form)
-      setMessage(validate)
-      return {
-        input: value,
-        message: validate,
-      }
-    },
-  }))
-
-  const onKeyDownValue = (bind) => {
-    setValue(bind.target.value.trim())
+/* eslint-disable react/prop-types */
+const Input = forwardRef(
+  ({ idx, type, name, label, placeholder, register, required, errors, ...props }, ref) => {
+    return (
+      <label htmlFor={idx} className={classes.label}>
+        <span>{label}</span>
+        <input
+          className={classes.input}
+          type={type}
+          placeholder={placeholder}
+          id={idx}
+          ref={ref}
+          {...register(name, { required })}
+          {...props}
+        />
+        {errors ? <span className={classes.errorClass}> {errors.message} </span> : ''}
+      </label>
+    )
   }
+)
 
-  let messageElement
-  if (message[0] !== '') {
-    messageElement = <span className={classes.errorClass}>{message[0]}</span>
-  }
-
-  return (
-    <label htmlFor={idx} className={classes.label}>
-      <span>{label}</span>
-      <input
-        className={classes.input}
-        type={type}
-        placeholder={placeholder}
-        id={idx}
-        ref={ref}
-        onKeyDown={(e) => onKeyDownValue(e)}
-        {...props}
-      />
-      {messageElement}
-    </label>
-  )
-})
-
-Button.defaultProps = {
+Input.defaultProps = {
   label: '',
   placeholder: '',
-  validation: '',
+  required: false,
 }
 
-Button.propTypes = {
+Input.propTypes = {
   idx: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   type: PropTypes.oneOf([
@@ -84,7 +63,8 @@ Button.propTypes = {
   ]).isRequired,
   label: PropTypes.string,
   placeholder: PropTypes.string,
-  validation: PropTypes.string,
+  register: PropTypes.func.isRequired,
+  required: PropTypes.bool,
 }
 
-export default Button
+export default Input

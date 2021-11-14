@@ -1,40 +1,34 @@
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 import Button from '../components/button'
 import Input from '../components/input'
-import { handleChange, validateAll } from '../utils/form'
+
+const RegisterSchema = yup.object().shape({
+  name: yup.string().required(),
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+  confirm_password: yup
+    .string()
+    .required()
+    .oneOf([yup.ref('password'), null], 'Passwords must match'),
+})
 
 const Register = function () {
-  const [isDisabled, setDisabled] = useState(true)
   const [isPassword, setPassword] = useState(true)
-  const [formField, setFormField] = useState({
-    name: {
-      ref: useRef(),
-      validate: [],
-      value: '',
-    },
-    email: {
-      ref: useRef(),
-      validate: [],
-      value: '',
-    },
-    password: {
-      ref: useRef(),
-      validate: [],
-      value: '',
-    },
-    confirm_password: {
-      ref: useRef(),
-      validate: [],
-      value: '',
-    },
-  })
 
-  const handleSubmit = (event) => {
-    if (validateAll(formField, setFormField)) {
-      console.log(formField)
-    }
-    event.preventDefault()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(RegisterSchema),
+  })
+  const onSubmit = (data) => {
+    console.log(data)
   }
 
   return (
@@ -42,48 +36,42 @@ const Register = function () {
       <h2 className="text-center text-4xl text-blue-900 font-display font-semibold lg:text-left xl:text-5xl xl:text-bold">
         Register
       </h2>
-      <div className="mt-5">
-        <form onSubmit={(event) => handleSubmit(event)}>
+      <div className="mt-10">
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div>
             <Input
-              idx="register_name"
+              idx="name"
               name="name"
               type="text"
               label="Full Name"
               placeholder="John Doe"
-              validation="required|min:8|max:50"
-              ref={formField.name.ref}
-              onChange={(event) =>
-                handleChange(event, formField, setFormField, setDisabled, 'name')
-              }
+              errors={errors.name}
+              ref={React.useRef()}
+              register={register}
             />
           </div>
-          <div className="mt-5">
+          <div className="mt-10">
             <Input
-              idx="register_email"
+              idx="email"
               name="email"
               type="text"
               label="Email"
               placeholder="admin@admin.com"
-              validation="required|email|min:8|max:50"
-              ref={formField.email.ref}
-              onChange={(event) =>
-                handleChange(event, formField, setFormField, setDisabled, 'email')
-              }
+              errors={errors.email}
+              ref={React.useRef()}
+              register={register}
             />
           </div>
           <div className="mt-10 flex justify-center items-center">
             <Input
-              idx="register_password"
-              name="register-password"
+              idx="password"
+              name="password"
               type={isPassword ? 'password' : 'text'}
               label="Password"
               placeholder={isPassword ? '**************' : 'Agny3Gg6wM6SqQP7'}
-              validation="required|min:8|max:50"
-              ref={formField.password.ref}
-              onChange={(event) =>
-                handleChange(event, formField, setFormField, setDisabled, 'password')
-              }
+              errors={errors.password}
+              ref={React.useRef()}
+              register={register}
             />
             <Button
               icon={isPassword ? 'eye' : 'eye-slash'}
@@ -93,20 +81,18 @@ const Register = function () {
           </div>
           <div className="mt-10">
             <Input
-              idx="register_confirm_password"
-              name="confirm-password"
+              idx="confirm_password"
+              name="confirm_password"
               type={isPassword ? 'password' : 'text'}
               label="Confirm Password"
               placeholder={isPassword ? '**************' : 'Agny3Gg6wM6SqQP7'}
-              validation="required|min:8|max:50|confirmation:password"
-              ref={formField.confirm_password.ref}
-              onChange={(event) =>
-                handleChange(event, formField, setFormField, setDisabled, 'confirm_password')
-              }
+              errors={errors.confirm_password}
+              ref={React.useRef()}
+              register={register}
             />
           </div>
           <div className="mt-10">
-            <Button icon="right" right fluid disabled={isDisabled} submit>
+            <Button icon="right" right fluid disabled={!isValid} submit>
               Register
             </Button>
           </div>
