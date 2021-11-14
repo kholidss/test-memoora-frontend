@@ -1,15 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import axios from '../plugins/axios'
 import Button from '../components/button'
 import Input from '../components/input'
+import Select from '../components/select'
 
 const RegisterSchema = yup.object().shape({
   name: yup.string().required(),
   email: yup.string().email().required(),
   password: yup.string().required(),
+  country: yup.string().required(),
   confirm_password: yup
     .string()
     .required()
@@ -18,6 +21,30 @@ const RegisterSchema = yup.object().shape({
 
 const Register = function () {
   const [isPassword, setPassword] = useState(true)
+  const [country, setCountry] = useState([])
+  const [countryLoading, setCountryLoading] = useState(true)
+
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_PROXY}/${import.meta.env.VITE_BASE_COUNTRY}`)
+      .then((res) => {
+        if (res.data.result) {
+          const getCountry = res.data.result.reduce((data, value, index) => {
+            data.push({
+              id: index,
+              name: value.name,
+              value: value.name,
+            })
+            return data
+          }, [])
+          setCountry(getCountry)
+          setCountryLoading(false)
+        }
+      })
+      .then(() => {
+        setCountryLoading(false)
+      })
+  }, [])
 
   const {
     register,
@@ -89,6 +116,19 @@ const Register = function () {
               errors={errors.confirm_password}
               ref={React.useRef()}
               register={register}
+            />
+          </div>
+          <div className="mt-10">
+            <Select
+              idx="country"
+              name="country"
+              label="Country"
+              laceholder="Select Country"
+              errors={errors.country}
+              ref={React.useRef()}
+              register={register}
+              lisData={country}
+              isLoading={countryLoading}
             />
           </div>
           <div className="mt-10">
