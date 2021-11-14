@@ -2,7 +2,7 @@
   "name": "memoora-frontend",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
     "lint": "eslint --ext .js,.jsx --ignore-path .gitignore src",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@hookform/resolvers": "^2.8.3",
     "@reduxjs/toolkit": "^1.6.2",
+    "axios": "^0.24.0",
     "history": "^5.1.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.0",
