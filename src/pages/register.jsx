@@ -42,7 +42,7 @@ const Register = function () {
       <h2 className="text-center text-4xl text-blue-900 font-display font-semibold lg:text-left xl:text-5xl xl:text-bold">
         Register
       </h2>
-      <div className="mt-12">
+      <div className="mt-5">
         <form onSubmit={(event) => handleSubmit(event)}>
           <div>
             <Input
@@ -58,7 +58,7 @@ const Register = function () {
               }
             />
           </div>
-          <div className="mt-10">
+          <div className="mt-5">
             <Input
               idx="register_email"
               name="email"
