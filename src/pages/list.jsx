@@ -28,10 +28,12 @@ const List = function () {
 
   const onSubmit = (data) => {
     setIsLoading(true)
+    const getLocalStore = JSON.parse(localStorage.getItem('userData'))
     axios
-      .post('/api/file', data, { headers: { Authorization: `Bearer ${userLocalData.token}` } })
+      .post('/api/file', data, { headers: { Authorization: `Bearer ${getLocalStore.token}` } })
       .then(() => {
         setIsLoading(false)
+        window.location.reload()
       })
       .catch(() => {
         setIsLoading(false)
