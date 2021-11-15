@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -20,9 +20,11 @@ const RegisterSchema = yup.object().shape({
 })
 
 const Register = function () {
+  const navigate = useNavigate()
   const [isPassword, setPassword] = useState(true)
   const [country, setCountry] = useState([])
   const [countryLoading, setCountryLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     axios
@@ -54,8 +56,18 @@ const Register = function () {
     mode: 'onChange',
     resolver: yupResolver(RegisterSchema),
   })
+
   const onSubmit = (data) => {
-    console.log(data)
+    setIsLoading(true)
+    axios
+      .post('/api/register', data)
+      .then(() => {
+        setIsLoading(false)
+        navigate('/login')
+      })
+      .catch(() => {
+        setIsLoading(false)
+      })
   }
 
   return (
@@ -132,7 +144,7 @@ const Register = function () {
             />
           </div>
           <div className="mt-10">
-            <Button icon="right" right fluid disabled={!isValid} submit>
+            <Button icon="right" right fluid disabled={!isValid} submit isLoading={isLoading}>
               Register
             </Button>
           </div>

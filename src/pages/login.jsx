@@ -27,20 +27,18 @@ const Login = function () {
   })
   const onSubmit = (data) => {
     setIsLoading(true)
-    console.log(data)
     axios
       .post('/api/login', data)
       .then((res) => {
-        localStorage.setItem('userData', JSON.stringify(res.data))
+        localStorage.setItem('userData', JSON.stringify(res.data.data))
         dispatch({
           type: 'FILL_DATA_USER',
-          payload: res.data,
+          payload: res.data.data,
         })
         setIsLoading(false)
         navigate('/list')
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
         setIsLoading(false)
       })
   }
