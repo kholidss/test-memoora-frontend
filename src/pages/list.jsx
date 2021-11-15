@@ -1,7 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import * as yup from 'yup'
-import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Input from '../components/input'
@@ -16,9 +14,9 @@ const ListSchema = yup.object().shape({
 })
 
 const List = function () {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
+  const [userLocalData, setUserLocalData] = useState([])
+
   const {
     register,
     handleSubmit,
@@ -30,38 +28,44 @@ const List = function () {
 
   const onSubmit = (data) => {
     setIsLoading(true)
-    console.log(data)
     axios
-      .post('/api/login', data)
-      .then((res) => {
-        console.log(res)
-        localStorage.setItem('userData', JSON.stringify(res.data))
-        dispatch({
-          type: 'FILL_DATA_USER',
-          payload: res.data,
-        })
+      .post('/api/file', data, { headers: { Authorization: `Bearer ${userLocalData.token}` } })
+      .then(() => {
         setIsLoading(false)
-        navigate('/list')
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
         setIsLoading(false)
       })
   }
 
+  useEffect(() => {
+    const getLocalStore = JSON.parse(localStorage.getItem('userData'))
+    axios
+      .get(`/api/file/${getLocalStore.id}`, {
+        headers: { Authorization: `Bearer ${getLocalStore.token}` },
+      })
+      .then((res) => {
+        setUserLocalData(res.data.data)
+      })
+      .catch(() => {})
+  }, [])
+
+  console.log(userLocalData)
+
   return (
-    <div className=" h-screen">
+    <>
       <Navbar />
-      <div className="flex h-screen">
-        <div className="w-2/3 bg-blue-200 p-4 flex items-center flex-col">
-          <div className="text-center text-2xl text-blue-900 font-display font-semibold lg:text-left xl:text-5xl xl:text-bold mb-2">
+      <div className="flex flex-wrap flex-col-reverse lg:flex-row lg:flex-nowrap bg-blue-200 pt-20">
+        <div className="w-full lg:w-2/3 p-4 flex items-center flex-col py-20">
+          <h1 className="text-center mb-6 text-2xl text-blue-900 font-display font-semibold xl:text-4xl xl:text-bold">
             List file:
-          </div>
-          <Card />
-          <Card />
+          </h1>
+          {userLocalData.map((a) => {
+            return <Card key={a._id} fileDirectory={a.fileDirectory} />
+          })}
         </div>
-        <div className="w-screen flex items-center flex-col p-3">
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full">
+        <div className="w-screen flex items-center flex-col p-3 bg-white py-20">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-xl px-12">
             <div className="mt-5 w-full">
               <Input
                 idx="=name"
@@ -94,7 +98,7 @@ const List = function () {
           </form>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
