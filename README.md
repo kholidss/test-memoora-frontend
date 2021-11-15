@@ -41,7 +41,7 @@ $ cp .env.example .env
 
 ```bash
 # Run
-$ npm run dev
+$ npm run serve
 ```
 
 ```bash
